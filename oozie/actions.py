@@ -1,4 +1,5 @@
 from yattag import Doc, indent
+import os
 
 class ShellAction:
     def __init__(self, name, command, env, args=[]):
@@ -11,8 +12,11 @@ class ShellAction:
         doc, tag, text = Doc().tagtext()
         with tag('shell', xmlns="uri:oozie:shell-action:0.2"):
             #do we actually need these even if we dont use them?
-            doc.stag('job-tracker')
-            doc.stag('name-node')
+            with tag('job-tracker'):
+                text(os.environ["JOBTRACKER"])
+            with tag('name-node'):
+                text(os.environ["NAMENODE"])
+
             with tag('exec'):
                 text(self.command)
             for argument in self.arguments:
