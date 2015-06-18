@@ -19,8 +19,13 @@ class OozieServer():
         else:
             return loads(response.content)["buildVersion"]
 
-    def clear(self, queueName):
+    def clear(self, coordinator):
+        #TODO find previous instance of this coordinator
         pass
+
+    def resubmit(self, coordinator):
+        self.clear(coordinator.name)
+        self.submit(coordinator)
 
     def submit(self, coordinator):
         deployment_path = "user/oozie/coordinators/{0}/{1}".format(time(), coordinator.name)
