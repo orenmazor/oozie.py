@@ -1,4 +1,5 @@
 from sys import argv
+import os
 from oozie import OozieServer, Workflow, actions, coordinators
 
 if __name__ == "__main__":
@@ -11,12 +12,5 @@ if __name__ == "__main__":
     jerb.add(actions.ShellAction(name="load1", command='whoami', env=[]))
     jerb.add(actions.ShellAction(name="load2", command='whoami', env=[]))
 
-    #this guy defines the coordinator job, probably
-    f = open("coordinator.xml", "w")
-    f.write(cord.as_xml(True))
-   
-    #upload to hdfs
-    path = ""
-    #now submit to oozie and maybe magic
-    serv.submit(path)  
+    serv.submit(cord)  
 

@@ -7,12 +7,13 @@ class Coordinator:
     self.name = name
     self.workflow = workflow
     self.frequency = frequency
-    self.start = datetime.now().isoformat()
-    self.end = (datetime.now() + relativedelta(years=100)).isoformat()
+    self.start = datetime.now().strftime("%Y-%m-%dT%H:%MZ")
+    self.end = (datetime.now() + relativedelta(years=100)).strftime("%Y-%m-%dT%H:%MZ")
 
-  def as_xml(self, indentation=False):
+  def as_xml(self, wf_path):
     doc, tag, text = Doc().tagtext()
-    with tag("coordinator-app", name=self.name, start=self.start, end=self.end, frequency=str(self.frequency)):
+    doc.asis("<?xml version='1.0' encoding='UTF-8'?>")
+    with tag("coordinator-app", xmlns="uri:oozie:coordinator:0.2", timezone="UTC", name=self.name, start=self.start, end=self.end, frequency=str(self.frequency)):
       with tag("controls"):
         with tag("timeout"):
           text("600")
@@ -22,10 +23,10 @@ class Coordinator:
           text("FIFO")
         with tag("throttle"):
           text("1")
-      doc.asis(self.workflow.as_xml(indent))
 
-    xml = doc.getvalue()
-    if indentation:
-        return indent(xml)
-    else:
-        return xml
+      with tag("action"):
+        with tag("workflow"):
+          with tag("app-path"):
+            text(wf_path)
+
+    return indent(doc.getvalue())

@@ -10,6 +10,9 @@ class ShellAction:
     def as_xml(self, indentation=False):
         doc, tag, text = Doc().tagtext()
         with tag('shell', xmlns="uri:oozie:shell-action:0.2"):
+            #do we actually need these even if we dont use them?
+            doc.stag('job-tracker')
+            doc.stag('name-node')
             with tag('exec'):
                 text(self.command)
             for argument in self.arguments:
