@@ -1,4 +1,6 @@
 from requests import get, post
+import os
+from yattag import Doc, indent
 from json import loads
 
 class OozieServer():
@@ -14,9 +16,22 @@ class OozieServer():
         else:
             return loads(response.content)["buildVersion"]
 
-    def submit(self, job):
-        content = job.as_xml()
-        response = post("{0}/oozie/v1/jobs".format(self.url), data=content, headers={'Content-Type': 'application/xml'})
-        print response.status_code
-        print response.content
+    def submit(self, path):
+      doc, tag, text = Doc().tagtext()
+      with tag("configuration"):
+        with tag("property"):
+          with tag("name"):
+            text("user.name")
+          with tag("value"):
+            text("oozie")
+
+        with tag("property"):
+          with tag("name"):
+            text("oozie.coord.application.path")
+          with tag("value"):
+            text(os.environ["HADOOP_PRODUCTION"] + "/oozie/coord/" + path)
+
+      content = doc.getvalue()
+      print content
+      response = post("{0}/oozie/v1/jobs".format(self.url), data=content, headers={'Content-Type': 'application/xml'})
 

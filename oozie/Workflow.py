@@ -1,14 +1,13 @@
 from yattag import Doc, indent
-from sortedcontainers import SortedList
 
 class Workflow:
     def __init__(self, name, queue="default"):
         self.name = name
-        self.actions = SortedList()
+        self.actions = ()
         self.queue = queue
 
     def add(self, action):
-        self.actions.append(action)
+        self.actions = self.actions + (action,)
 
     def as_xml(self, indentation=False):
         doc, tag, text = Doc().tagtext()
