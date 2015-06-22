@@ -1,5 +1,4 @@
 from yattag import Doc, indent
-from xml.sax.saxutils import quoteattr
 import os
 
 class ShellAction:
@@ -19,9 +18,7 @@ class ShellAction:
                 text(os.environ["NAMENODE"])
 
             with tag('exec'):
-                #yattag only escapes <>&, but we need to escape some more stuff
-                command = self.command
-                doc.asis(quoteattr(command))
+                text(self.command)
             for argument in self.arguments:
                 with tag('argument'):
                     text(argument)
