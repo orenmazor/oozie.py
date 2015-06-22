@@ -2,11 +2,13 @@ from yattag import Doc, indent
 import os
 
 class ShellAction:
-    def __init__(self, name, command, env, args=[]):
+    def __init__(self, name, command, env, archives=[], args=[], files=[]):
         self.name = name
         self.command = command
         self.environment_vars = env
         self.arguments = args
+        self.files = files
+        self.archives = archives
 
     def as_xml(self, indentation=False):
         doc, tag, text = Doc().tagtext()
@@ -25,6 +27,13 @@ class ShellAction:
             for env in self.environment_vars:
                 with tag('env-var'):
                     text(env)
+            for archive in self.archives:
+                with tag('archive'):
+                    text(archive)
+            for f in self.files:
+                with tag('file'):
+                    text(f)
+                     
             doc.stag('capture-output')
 
         xml = doc.getvalue()
