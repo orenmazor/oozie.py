@@ -7,7 +7,7 @@ class ShellAction:
         self.name = name
         self.command = command
         self.environment_vars = env
-        self.arguments = []
+        self.arguments = args
 
     def as_xml(self, indentation=False):
         doc, tag, text = Doc().tagtext()
