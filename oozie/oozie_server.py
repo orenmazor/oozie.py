@@ -15,7 +15,7 @@ class OozieServer():
     def version(self):
         response = get("{0}/oozie/v1/admin/build-version".format(self.url))
         if response.status_code != 200:
-            raise RuntimeError("fuck")
+            raise RuntimeError("Couldn't reach oozie server. Is the provided url correct?")
         else:
             return loads(response.content)["buildVersion"]
 
