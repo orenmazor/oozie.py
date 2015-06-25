@@ -27,7 +27,7 @@ class OozieServer():
         self.clear(coordinator.name)
         self.submit(coordinator)
 
-    def submit(self, coordinator):
+    def submit(self, coordinator, files=[]):
         deployment_path = "user/oozie/coordinators/{0}/{1}".format(time(), coordinator.name)
         workflow_path = "{0}/workflow.xml".format(deployment_path)
         coordinator_path = "{0}/coordinator.xml".format(deployment_path)
@@ -35,6 +35,9 @@ class OozieServer():
         hdfs.make_dir(deployment_path)
         hdfs.create_file(coordinator_path, coordinator.as_xml("/"+workflow_path))
         hdfs.create_file(workflow_path, coordinator.workflow.as_xml())
+
+        for f in files:
+            hdfs.create_file("{}/{}".format(deployment_path, f.name), f.read())  
 
         doc, tag, text = Doc().tagtext()
         with tag("configuration"):
