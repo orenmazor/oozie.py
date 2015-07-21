@@ -34,7 +34,6 @@ class ShellAction:
                 with tag('file'):
                     text(f)
                      
-            doc.stag('capture-output')
 
         xml = doc.getvalue()
         if indentation:
