@@ -24,7 +24,7 @@ class Workflow:
             doc.stag('start', to=self.actions[0].name)
 
             for index, action in enumerate(self.actions):
-                with tag("action", name=action.name, xmlns="uri:oozie:workflow:0.5"):
+                with tag("action", name=action.name):
                     doc.asis(action.as_xml(indent))
                     if index + 1 < len(self.actions):
                         next_action = self.actions[index+1]
