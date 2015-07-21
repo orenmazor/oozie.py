@@ -21,7 +21,6 @@ class Workflow:
                       with tag('value'):
                           text(self.queue)
 
-            doc.stag('start', to=self.actions[0].name)
 
             for index, action in enumerate(self.actions):
                 with tag("action", name=action.name):
@@ -37,6 +36,7 @@ class Workflow:
                 with tag("message"):
                     text("KIA")
             doc.stag('end', name="end")
+            doc.stag('start', to=self.actions[0].name)
 
         return indent(doc.getvalue())
 
