@@ -13,15 +13,7 @@ class Workflow:
         doc, tag, text = Doc().tagtext()
         doc.asis("<?xml version='1.0' encoding='UTF-8'?>")
         with tag('workflow-app', ('xmlns:sla', 'uri:oozie:sla:0.2'), name=self.name, xmlns="uri:oozie:workflow:0.5"):
-            with tag('global'):
-                with tag('configuration'):
-                    with tag('property'):
-                      with tag('name'):
-                          text('queueName')
-                      with tag('value'):
-                          text(self.queue)
-
-
+            doc.stag('start', to=self.actions[0].name)
             for index, action in enumerate(self.actions):
                 with tag("action", name=action.name):
                     doc.asis(action.as_xml(indent))
@@ -36,7 +28,6 @@ class Workflow:
                 with tag("message"):
                     text("KIA")
             doc.stag('end', name="end")
-            doc.stag('start', to=self.actions[0].name)
 
         return indent(doc.getvalue())
 
