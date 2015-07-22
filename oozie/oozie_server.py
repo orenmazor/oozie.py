@@ -20,11 +20,11 @@ class OozieServer():
         else:
             return loads(response.content)["buildVersion"]
 
-    def submit(self, coords, files=[]):
+    def submit(self, bundle_name, coords, files=[]):
         hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
         deployment_path = "user/oozie/coordinators/{0}".format(time())
         bundle_path = "{0}/bundle.xml".format(deployment_path)
-        bund = bundle.Bundle("starscream")
+        bund = bundle.Bundle(bundle_name)
 
         for coordinator in coords:
             workflow_path = "{0}/{1}/workflow.xml".format(deployment_path, coordinator.name)
