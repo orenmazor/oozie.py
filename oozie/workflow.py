@@ -30,7 +30,7 @@ class Workflow:
                     with tag("to"):
                         text(self.email)
                     with tag("subject"):
-                        text("WF ${wf:id()} failed")
+                        text("WF ${wf:name()} failed")
                     with tag("body"):
                         text("${wf:errorMessage(wf:lastErrorNode())}")
                 doc.stag("ok", to="kill")
