@@ -13,15 +13,15 @@ class OozieServer():
 
         print "Connected to Ooozie Version {0}".format(self.version())
 
-    def running_bundles(self):
+    def bundles(self, status):
         response = get("{0}/oozie/v1/jobs?jobtype=bundle".format(self.url))
         if response.status_code != 200:
             raise RuntimeError("Couldn't reach oozie server. Is the provided url correct?")
         else:
-            return [job for job in loads(response.content)['bundlejobs'] if job['status'] == 'RUNNING']
+            return [job for job in loads(response.content)['bundlejobs'] if job['status'] == status]
 
-    def suspend(self, thing):
-        response = put("{0}/oozie/v1/job/{1}?action=suspend".format(self.url, thing))
+    def set_status(self, thing, status):
+        response = put("{0}/oozie/v1/job/{1}?action={2}".format(self.url, thing, status))
         if response.status_code != 200:
             raise RuntimeError("Couldn't reach oozie server. Is the provided url correct?")
 
