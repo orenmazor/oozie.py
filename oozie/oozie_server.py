@@ -32,7 +32,7 @@ class OozieServer():
             hdfs.make_dir(deployment_path)
             hdfs.create_file(coordinator_path, coordinator.as_xml("/"+workflow_path))
             hdfs.create_file(workflow_path, coordinator.workflow.as_xml())
-            bund.add(coordinator, coordinator_path)
+            bund.add(coordinator, "/"+coordinator_path)
         
         hdfs.create_file(bundle_path, bund.as_xml())
 
