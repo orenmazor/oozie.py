@@ -16,7 +16,7 @@ class Bundle:
             for index, coordinator in enumerate(self.coordinators):
                 with tag("coordinator", name=coordinator[0].name):
                     with tag("app-path"):
-                        coordinator[1]
+                        text(coordinator[1])
 
         return indent(doc.getvalue())
 
