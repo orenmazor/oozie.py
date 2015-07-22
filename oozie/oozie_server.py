@@ -4,6 +4,7 @@ from time import time
 from yattag import Doc
 from json import loads
 from pywebhdfs.webhdfs import PyWebHdfsClient
+from oozie import bundle
 
 
 class OozieServer():
@@ -23,7 +24,7 @@ class OozieServer():
         hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
         deployment_path = "user/oozie/coordinators/{0}".format(time())
         bundle_path = "{0}/bundle.xml".format(deployment_path)
-        bundle = Bundle("starscream")
+        bund = bundle.Bundle("starscream")
 
         for coordinator in coordinators:
             workflow_path = "{0}/{1}/workflow.xml".format(deployment_path, coordinator.name)
@@ -31,9 +32,9 @@ class OozieServer():
             hdfs.make_dir(deployment_path)
             hdfs.create_file(coordinator_path, coordinator.as_xml("/"+workflow_path))
             hdfs.create_file(workflow_path, coordinator.workflow.as_xml())
-            bundle.add(coordinator, coordinator_path)
+            bund.add(coordinator, coordinator_path)
         
-        hdfs.create_file(bundle_path, bundle.as_xml())
+        hdfs.create_file(bundle_path, bund.as_xml())
 
         for f in files:
             hdfs.create_file("{}/{}".format(deployment_path, f.name), f.read())  
