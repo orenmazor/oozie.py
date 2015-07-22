@@ -19,22 +19,21 @@ class OozieServer():
         else:
             return loads(response.content)["buildVersion"]
 
-    def clear(self, coordinator):
-        #TODO find previous instance of this coordinator
-        pass
-
-    def resubmit(self, coordinator):
-        self.clear(coordinator.name)
-        self.submit(coordinator)
-
-    def submit(self, coordinator, files=[]):
-        deployment_path = "user/oozie/coordinators/{0}/{1}".format(time(), coordinator.name)
-        workflow_path = "{0}/workflow.xml".format(deployment_path)
-        coordinator_path = "{0}/coordinator.xml".format(deployment_path)
+    def submit(self, coordinators, files=[]):
         hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
-        hdfs.make_dir(deployment_path)
-        hdfs.create_file(coordinator_path, coordinator.as_xml("/"+workflow_path))
-        hdfs.create_file(workflow_path, coordinator.workflow.as_xml())
+        deployment_path = "user/oozie/coordinators/{0}".format(time())
+        bundle_path = "{0}/bundle.xml".format(deployment_path)
+        bundle = Bundle("starscream")
+
+        for coordinator in coordinators:
+            workflow_path = "{0}/{1}/workflow.xml".format(deployment_path, coordinator.name)
+            coordinator_path = "{0}/{1}/coordinator.xml".format(deployment_path, coordinator.name)
+            hdfs.make_dir(deployment_path)
+            hdfs.create_file(coordinator_path, coordinator.as_xml("/"+workflow_path))
+            hdfs.create_file(workflow_path, coordinator.workflow.as_xml())
+            bundle.add(coordinator, coordinator_path)
+        
+        hdfs.create_file(bundle_path, bundle.as_xml())
 
         for f in files:
             hdfs.create_file("{}/{}".format(deployment_path, f.name), f.read())  
@@ -49,7 +48,7 @@ class OozieServer():
 
             with tag("property"):
                 with tag("name"):
-                    text("oozie.coord.application.path")
+                    text("oozie.bundle.application.path")
                 with tag("value"):
                     text("/"+deployment_path)
 

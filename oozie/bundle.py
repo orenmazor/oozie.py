@@ -2,13 +2,12 @@ from yattag import Doc, indent
 
 
 class Bundle:
-    def __init__(self, name, queue="default"):
+    def __init__(self, name):
         self.name = name
-        self.actions = ()
-        self.queue = queue
+        self.coordinators = ()
 
-    def add(self, action):
-        self.actions = self.actions + (action,)
+    def add(self, coordinator):
+        self.coordinators = self.coordinators + (coordinator,)
 
     def as_xml(self):
         doc, tag, text = Doc().tagtext()
