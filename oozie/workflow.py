@@ -34,7 +34,7 @@ class Workflow:
                     with tag("body"):
                         text("${wf:errorMessage(wf:lastErrorNode())}")
                 doc.stag("ok", to="kill")
-                doc.stag("error", to="notify")
+                doc.stag("error", to="kill")
 
             with tag("kill", name="kill"):
                 with tag("message"):
