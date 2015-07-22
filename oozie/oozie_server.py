@@ -1,4 +1,4 @@
-from requests import get, post
+from requests import get, post, put
 import os
 from time import time
 from yattag import Doc
@@ -12,6 +12,20 @@ class OozieServer():
         self.url = url
 
         print "Connected to Ooozie Version {0}".format(self.version())
+
+    def running_bundles(self):
+        response = get("{0}/oozie/v1/jobs?jobtype=bundle".format(self.url))
+        if response.status_code != 200:
+            raise RuntimeError("Couldn't reach oozie server. Is the provided url correct?")
+        else:
+            return [job for job in loads(response.content)['bundlejobs'] if job['status'] == 'RUNNING']
+
+    def suspend(self, thing):
+        response = put("{0}/oozie/v1/job/{1}?action=suspend".format(self.url, thing))
+        if response.status_code != 200:
+            raise RuntimeError("Couldn't reach oozie server. Is the provided url correct?")
+
+        return True
 
     def version(self):
         response = get("{0}/oozie/v1/admin/build-version".format(self.url))
