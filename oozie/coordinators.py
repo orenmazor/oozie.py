@@ -13,7 +13,7 @@ class Coordinator:
   def as_xml(self, wf_path):
     doc, tag, text = Doc().tagtext()
     doc.asis("<?xml version='1.0' encoding='UTF-8'?>")
-    with tag("coordinator-app", xmlns="uri:oozie:coordinator:0.2", timezone="UTC", name=self.name, start=self.start, end=self.end, frequency=str(self.frequency)):
+    with tag("coordinator-app", xmlns="uri:oozie:coordinator:0.2", timezone="America/New_York", name=self.name, start=self.start, end=self.end, frequency=str(self.frequency)):
       with tag("controls"):
         with tag("timeout"):
           text("600")
