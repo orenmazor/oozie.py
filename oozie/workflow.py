@@ -1,11 +1,12 @@
 from yattag import Doc, indent
 
 class Workflow:
-    def __init__(self, name, email, queue="default"):
+    def __init__(self, name, email, notification_url, queue="default"):
         self.name = name
         self.actions = ()
         self.queue = queue
         self.email = email
+        self.notification_url = notification_url
 
     def add(self, action):
         self.actions = self.actions + (action,)
@@ -14,6 +15,14 @@ class Workflow:
         doc, tag, text = Doc().tagtext()
         doc.asis("<?xml version='1.0' encoding='UTF-8'?>")
         with tag('workflow-app', ('xmlns:sla', 'uri:oozie:sla:0.2'), name=self.name, xmlns="uri:oozie:workflow:0.5"):
+            with tag('configuration'):
+                if self.notification_url:
+                    with tag('property'):
+                        with tag('name'):
+                            text('oozie.wf.action.notification.url')
+                        with tag('value'):
+                            text(self.notification_url)
+
             doc.stag('start', to=self.actions[0].name)
             for index, action in enumerate(self.actions):
                 with tag("action", name=action.name):
