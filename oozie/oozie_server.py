@@ -34,6 +34,35 @@ class OozieServer():
         else:
             return loads(response.content)["buildVersion"]
 
+    # yeah yeah DRY... TODO
+    def run(self, wf):
+        hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
+        deployment_path = "user/oozie/one_off_runs/{0}".format(time())
+        workflow_path = "{0}/{1}/workflow.xml".format(deployment_path, wf.name)
+        hdfs.make_dir(deployment_path)
+        hdfs.create_file(workflow_path, wf.as_xml())
+        doc, tag, text = Doc().tagtext()
+        with tag("configuration"):
+            with tag("property"):
+                with tag("name"):
+                    text("user.name")
+                with tag("value"):
+                    text("oozie")
+
+            with tag("property"):
+                with tag("name"):
+                    text("oozie.wf.application.path")
+                with tag("value"):
+                    text("/"+deployment_path)
+
+        configuration = doc.getvalue()
+        response = post("{0}/oozie/v1/jobs".format(self.url), data=configuration, headers={'Content-Type': 'application/xml'})
+
+        if response.status_code > 399:
+            print response.headers["oozie-error-message"]
+        print response.status_code
+        print response.content
+
     def submit(self, bundle_name, coords, files=[]):
         hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
         deployment_path = "user/oozie/coordinators/{0}".format(time())
