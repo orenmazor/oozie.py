@@ -3,12 +3,15 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
 class Coordinator:
-  def __init__(self, name, workflow, frequency, starttime):
+  def __init__(self, name, workflow, frequency, starttime, endtime=None):
     self.name = name
     self.workflow = workflow
     self.frequency = frequency
     self.start = starttime  # datetime.now().strftime("%Y-%m-%dT%H:%MZ")
-    self.end = (datetime.now() + relativedelta(years=100)).strftime("%Y-%m-%dT%H:%MZ")
+    if endtime:
+        self.end = endtime
+    else:
+        self.end = (datetime.now() + relativedelta(years=100)).strftime("%Y-%m-%dT%H:%MZ")
 
   def as_xml(self, wf_path):
     doc, tag, text = Doc().tagtext()
