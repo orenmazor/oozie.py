@@ -62,6 +62,7 @@ class OozieServer():
             print response.headers["oozie-error-message"]
         print response.status_code
         print response.content
+        return loads(response.content)
 
     def submit(self, bundle_name, coords, files=[]):
         hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
