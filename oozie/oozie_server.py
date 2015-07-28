@@ -56,7 +56,7 @@ class OozieServer():
                     text("/"+workflow_path)
 
         configuration = doc.getvalue()
-        response = post("{0}/oozie/v1/jobs".format(self.url), data=configuration, headers={'Content-Type': 'application/xml'})
+        response = post("{0}/oozie/v1/jobs?action=start".format(self.url), data=configuration, headers={'Content-Type': 'application/xml'})
 
         if response.status_code > 399:
             print response.headers["oozie-error-message"]
