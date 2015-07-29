@@ -5,10 +5,20 @@ import os
 class SubWorkflowAction:
     def __init__(self, name, flow):
         self.name = name
-        self.flow = flow
+        self.sub_wf_path = flow
 
     def as_xml(self, indentation=False):
-        return self.flow.as_xml(indentation)
+        doc, tag, text = Doc().tagtext()
+        with tag('sub-workflow'):
+            with tag('app-path'):
+                text(self.sub_wf_path)
+            doc.stag("propagate-configuration")
+
+        xml = doc.getvalue()
+        if indentation:
+            return indent(xml)
+        else:
+            return xml
 
 
 class ShellAction:
@@ -43,11 +53,10 @@ class ShellAction:
             for f in self.files:
                 with tag('file'):
                     text(f)
-                     
 
         xml = doc.getvalue()
         if indentation:
-          return indent(xml)
+            return indent(xml)
         else:
-          return xml
+            return xml
 
