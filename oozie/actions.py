@@ -1,6 +1,16 @@
 from yattag import Doc, indent
 import os
 
+
+class SubWorkflowAction:
+    def __init__(self, name, flow):
+        self.name = name
+        self.flow = flow
+
+    def as_xml(self, indentation=False):
+        return self.flow.as_xml(indentation)
+
+
 class ShellAction:
     def __init__(self, name, command, env, archives=[], args=[], files=[]):
         self.name = name
