@@ -10,14 +10,14 @@ class Workflow:
     def add(self, action):
         self.actions = self.actions + (action,)
 
-    def as_xml(self):
+    def as_xml(self, deployment_path=""):
         doc, tag, text = Doc().tagtext()
         doc.asis("<?xml version='1.0' encoding='UTF-8'?>")
         with tag('workflow-app', ('xmlns:sla', 'uri:oozie:sla:0.2'), name=self.name, xmlns="uri:oozie:workflow:0.5"):
             doc.stag('start', to=self.actions[0].name)
             for index, action in enumerate(self.actions):
                 with tag("action", name=action.name):
-                    doc.asis(action.as_xml(indent))
+                    doc.asis(action.as_xml(deployment_path, indent))
                     if index + 1 < len(self.actions):
                         next_action = self.actions[index+1]
                         doc.stag("ok", to=next_action.name)

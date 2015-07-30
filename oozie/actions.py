@@ -3,15 +3,14 @@ import os
 
 
 class SubWorkflowAction:
-    def __init__(self, name, flow):
+    def __init__(self, name):
         self.name = name
-        self.sub_wf_path = flow
 
-    def as_xml(self, indentation=False):
+    def as_xml(self, deployment_path, indentation=False):
         doc, tag, text = Doc().tagtext()
         with tag('sub-workflow'):
             with tag('app-path'):
-                text(self.sub_wf_path)
+                text(deployment_path)
             doc.stag("propagate-configuration")
 
         xml = doc.getvalue()
@@ -30,7 +29,7 @@ class ShellAction:
         self.files = files
         self.archives = archives
 
-    def as_xml(self, indentation=False):
+    def as_xml(self, deployment_path, indentation=False):
         doc, tag, text = Doc().tagtext()
         with tag('shell', xmlns="uri:oozie:shell-action:0.2"):
             #do we actually need these even if we dont use them?

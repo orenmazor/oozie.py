@@ -40,7 +40,7 @@ class OozieServer():
         deployment_path = "user/oozie/one_off_runs/{0}/{1}".format(time(), wf.name)
         workflow_path = "{0}/workflow.xml".format(deployment_path)
         hdfs.make_dir(deployment_path)
-        hdfs.create_file(workflow_path, wf.as_xml())
+        hdfs.create_file(workflow_path, wf.as_xml(deployment_path))
         doc, tag, text = Doc().tagtext()
         with tag("configuration"):
             with tag("property"):
@@ -75,7 +75,7 @@ class OozieServer():
             coordinator_path = "{0}/{1}/coordinator.xml".format(deployment_path, coordinator.name)
             hdfs.make_dir(deployment_path)
             hdfs.create_file(coordinator_path, coordinator.as_xml("/"+workflow_path))
-            hdfs.create_file(workflow_path, coordinator.workflow.as_xml())
+            hdfs.create_file(workflow_path, coordinator.workflow.as_xml(deployment_path))
             bund.add(coordinator, "/"+coordinator_path)
         
         hdfs.create_file(bundle_path, bund.as_xml())
