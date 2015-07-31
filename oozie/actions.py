@@ -10,7 +10,7 @@ class SubWorkflowAction:
         doc, tag, text = Doc().tagtext()
         with tag('sub-workflow'):
             with tag('app-path'):
-                text(deployment_path)
+                text("/"+deployment_path)
             doc.stag("propagate-configuration")
 
         xml = doc.getvalue()
