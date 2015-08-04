@@ -1,4 +1,6 @@
 from yattag import Doc, indent
+from pywebhdfs.webhdfs import PyWebHdfsClient
+import os
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
@@ -12,6 +14,12 @@ class Coordinator:
         self.end = endtime
     else:
         self.end = (datetime.now() + relativedelta(years=100)).strftime("%Y-%m-%dT%H:%MZ")
+
+  def save(self, path):
+    hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
+    coordinator_path = "{0}/coordinator.xml".format(path)
+    hdfs.make_dir(path)
+    hdfs.create_file(coordinator_path, self.as_xml())
 
   def as_xml(self, wf_path):
     doc, tag, text = Doc().tagtext()
