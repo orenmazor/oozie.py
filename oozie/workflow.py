@@ -1,4 +1,6 @@
 from yattag import Doc, indent
+from pywebhdfs.webhdfs import PyWebHdfsClient
+import os
 
 class Workflow:
     def __init__(self, name, email, queue="default"):
@@ -9,6 +11,12 @@ class Workflow:
 
     def add(self, action):
         self.actions = self.actions + (action,)
+
+    def save(self, path, workflow_name="workflow.xml"):
+        hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
+        workflow_path = "{0}/workflow.xml".format(path)
+        hdfs.make_dir(path)
+        hdfs.create_file(workflow_path, self.as_xml())
 
     def as_xml(self):
         doc, tag, text = Doc().tagtext()
