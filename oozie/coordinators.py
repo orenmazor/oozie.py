@@ -42,6 +42,6 @@ class Coordinator:
       with tag("action"):
         with tag("workflow"):
           with tag("app-path"):
-            text(self.workflow.path)
+            text(self.workflow.path + "/" + self.workflow.name)
 
     return indent(doc.getvalue())

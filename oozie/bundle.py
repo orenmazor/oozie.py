@@ -6,17 +6,17 @@ class Bundle:
         self.name = name
         self.coordinators = ()
 
-    def add(self, coordinator, path):
-        self.coordinators = self.coordinators + ((coordinator, path),)
+    def add(self, coordinator):
+        self.coordinators.append(coordinator)
 
     def as_xml(self):
         doc, tag, text = Doc().tagtext()
         doc.asis("<?xml version='1.0' encoding='UTF-8'?>")
         with tag('bundle-app', name=self.name, xmlns="uri:oozie:bundle:0.1"):
-            for index, coordinator in enumerate(self.coordinators):
-                with tag("coordinator", name=coordinator[0].name):
+            for coordinator in self.coordinators:
+                with tag("coordinator", name=coordinator.name):
                     with tag("app-path"):
-                        text(coordinator[1])
+                        text(coordinator.path + "/" + coordinator.name)
 
         return indent(doc.getvalue())
 

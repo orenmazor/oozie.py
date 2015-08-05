@@ -71,7 +71,7 @@ class OozieServer():
         bund = bundle.Bundle(bundle_name)
 
         for coordinator in coords:
-            bund.add(coordinator, "/"+coordinator.path)
+            bund.add(coordinator)
         
         hdfs.create_file(bundle_path, bund.as_xml())
 
