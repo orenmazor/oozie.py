@@ -16,7 +16,7 @@ class Bundle:
             for coordinator in self.coordinators:
                 with tag("coordinator", name=coordinator.name):
                     with tag("app-path"):
-                        text(coordinator.path + "/" + coordinator.name)
+                        text("/"+coordinator.path + "/" + coordinator.name)
 
         return indent(doc.getvalue())
 
