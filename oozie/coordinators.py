@@ -21,7 +21,7 @@ class Coordinator:
 
   def save(self):
     hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
-    coordinator_path = "{0}/{1}/coordinator.xml".format(path, self.name)
+    coordinator_path = "{0}/{1}/coordinator.xml".format(self.path, self.name)
     hdfs.make_dir(self.path)
     hdfs.create_file(coordinator_path, self.as_xml())
 
