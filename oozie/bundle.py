@@ -7,7 +7,7 @@ class Bundle:
         self.coordinators = ()
 
     def add(self, coordinator):
-        self.coordinators.append(coordinator)
+        self.coordinators = self.coordinators + (coordinator,)
 
     def as_xml(self):
         doc, tag, text = Doc().tagtext()
