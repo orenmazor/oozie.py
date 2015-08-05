@@ -67,7 +67,7 @@ class OozieServer():
     def submit(self, bundle_name, coords, files=[]):
         hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
         deployment_path = "user/oozie/bundles/{0}".format(bundle_name)
-        bundle_path = "{0}/{1}/bundle.xml".format(deployment_path, bundle_name)
+        bundle_path = "{0}/bundle.xml".format(deployment_path, bundle_name)
         bund = bundle.Bundle(bundle_name)
 
         for coordinator in coords:
