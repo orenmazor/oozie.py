@@ -3,19 +3,23 @@ from pywebhdfs.webhdfs import PyWebHdfsClient
 import os
 
 class Workflow:
-    def __init__(self, name, email, queue="default"):
+    def __init__(self, name, email, path="user/oozie/workflows", queue="default"):
         self.name = name
         self.actions = ()
         self.queue = queue
         self.email = email
+        self.path = path
+
+    def path(self):
+        return self.path
 
     def add(self, action):
         self.actions = self.actions + (action,)
 
-    def save(self, path, workflow_name="workflow.xml"):
+    def save(self, workflow_name="workflow.xml"):
         hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
-        workflow_path = "{0}/workflow.xml".format(path)
-        hdfs.make_dir(path)
+        workflow_path = "{0}/{1}/workflow.xml".format(self.path, self.name)
+        hdfs.make_dir(self.path)
         hdfs.create_file(workflow_path, self.as_xml())
 
     def as_xml(self):
