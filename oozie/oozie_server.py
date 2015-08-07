@@ -34,13 +34,7 @@ class OozieServer():
         else:
             return loads(response.content)["buildVersion"]
 
-    # yeah yeah DRY... TODO
     def run(self, wf):
-        hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
-        deployment_path = "user/oozie/one_off_runs/{0}/{1}".format(time(), wf.name)
-        workflow_path = "{0}/workflow.xml".format(deployment_path)
-        hdfs.make_dir(deployment_path)
-        hdfs.create_file(workflow_path, wf.as_xml())
         doc, tag, text = Doc().tagtext()
         with tag("configuration"):
             with tag("property"):
@@ -53,7 +47,7 @@ class OozieServer():
                 with tag("name"):
                     text("oozie.wf.application.path")
                 with tag("value"):
-                    text("/"+workflow_path)
+                    text("/"+wf.path())
 
         configuration = doc.getvalue()
         response = post("{0}/oozie/v1/jobs?action=start".format(self.url), data=configuration, headers={'Content-Type': 'application/xml'})

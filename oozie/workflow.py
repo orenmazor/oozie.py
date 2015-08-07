@@ -11,7 +11,7 @@ class Workflow:
         self.path = path
 
     def path(self):
-        return self.path
+        return self.path + "/" + self.name + "/workflow.xml"
 
     def add(self, action):
         self.actions = self.actions + (action,)
