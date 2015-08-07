@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='Oozie.py',
-      version='1.5',
+      version='1.6',
       description='wrapper around submitting jobs to oozie',
       author='Oren',
       author_email='oren.mazor@shopify.com',

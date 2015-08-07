@@ -4,8 +4,9 @@ from pywebhdfs.webhdfs import PyWebHdfsClient
 
 
 class Bundle:
-    def __init__(self, name):
+    def __init__(self, name, path="user/oozie/bundles"):
         self.name = name
+        self.path = path
         self.coordinators = ()
 
     def add(self, coordinator):
