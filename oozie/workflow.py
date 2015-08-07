@@ -1,6 +1,4 @@
 from yattag import Doc, indent
-from json import loads
-from requests import post
 from pywebhdfs.webhdfs import PyWebHdfsClient
 import os
 
@@ -23,30 +21,6 @@ class Workflow:
         workflow_path = "{0}/{1}/workflow.xml".format(self.path, self.name)
         hdfs.make_dir(self.path)
         hdfs.create_file(workflow_path, self.as_xml())
-
-    def submit(self):
-        doc, tag, text = Doc().tagtext()
-        with tag("configuration"):
-            with tag("property"):
-                with tag("name"):
-                    text("user.name")
-                with tag("value"):
-                    text("oozie")
-
-            with tag("property"):
-                with tag("name"):
-                    text("oozie.wf.application.path")
-                with tag("value"):
-                    text("/{}/{}".format(self.path, self.name))
-
-        configuration = doc.getvalue()
-        response = post("{0}/oozie/v1/jobs?action=start".format(self.url), data=configuration, headers={'Content-Type': 'application/xml'})
-
-        if response.status_code > 399:
-            print response.headers["oozie-error-message"]
-        print response.status_code
-        print response.content
-        return loads(response.content)
 
     def as_xml(self):
         doc, tag, text = Doc().tagtext()
