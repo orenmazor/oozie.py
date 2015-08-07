@@ -47,7 +47,7 @@ class OozieServer():
                 with tag("name"):
                     text("oozie.wf.application.path")
                 with tag("value"):
-                    text("/"+wf.path())
+                    text("/"+wf.path + "/" + wf.name)
 
         configuration = doc.getvalue()
         response = post("{0}/oozie/v1/jobs?action=start".format(self.url), data=configuration, headers={'Content-Type': 'application/xml'})
