@@ -1,10 +1,8 @@
 from requests import get, post, put
 import os
-from time import time
 from yattag import Doc
 from json import loads
 from pywebhdfs.webhdfs import PyWebHdfsClient
-from oozie import bundle
 
 
 class OozieServer():
@@ -58,19 +56,11 @@ class OozieServer():
         print response.content
         return loads(response.content)
 
-    def submit(self, bundle_name, coords, files=[]):
+    def submit(self, bund, files=[]):
         hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
-        deployment_path = "user/oozie/bundles/{0}".format(bundle_name)
-        bundle_path = "{0}/bundle.xml".format(deployment_path, bundle_name)
-        bund = bundle.Bundle(bundle_name)
-
-        for coordinator in coords:
-            bund.add(coordinator)
-        
-        hdfs.create_file(bundle_path, bund.as_xml())
 
         for f in files:
-            hdfs.create_file("{}/{}/{}".format(deployment_path, bundle_name, f.name), f.read())  
+            hdfs.create_file("{}/{}".format(bund.path, f.name), f.read())  
 
         doc, tag, text = Doc().tagtext()
         with tag("configuration"):
@@ -84,7 +74,7 @@ class OozieServer():
                 with tag("name"):
                     text("oozie.bundle.application.path")
                 with tag("value"):
-                    text("/"+deployment_path)
+                    text("/"+bund.path)
 
         configuration = doc.getvalue()
         response = post("{0}/oozie/v1/jobs".format(self.url), data=configuration, headers={'Content-Type': 'application/xml'})

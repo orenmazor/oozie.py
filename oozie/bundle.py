@@ -1,4 +1,6 @@
 from yattag import Doc, indent
+import os
+from pywebhdfs.webhdfs import PyWebHdfsClient
 
 
 class Bundle:
@@ -8,6 +10,13 @@ class Bundle:
 
     def add(self, coordinator):
         self.coordinators = self.coordinators + (coordinator,)
+
+    def save(self):
+        hdfs = PyWebHdfsClient(host=os.environ["WEBHDFS_HOST"], port='14000', user_name='oozie')
+        deployment_path = "user/oozie/bundles/{0}".format(self.name)
+        bundle_path = "{0}/bundle.xml".format(deployment_path, self.name)
+        
+        hdfs.create_file(bundle_path, self.as_xml())
 
     def as_xml(self):
         doc, tag, text = Doc().tagtext()
