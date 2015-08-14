@@ -50,7 +50,7 @@ class Workflow:
 
             with tag("kill", name="kill"):
                 with tag("message"):
-                    text("${wf:errorMessage(wf:lastErrorNode())}")
+                    text("${wf:lastErrorNode()} - ${wf:actionTrackerUri()}")
             doc.stag('end', name="end")
 
         return indent(doc.getvalue())
