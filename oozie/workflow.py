@@ -44,7 +44,7 @@ class Workflow:
                     with tag("subject"):
                         text("WF ${wf:name()} failed")
                     with tag("body"):
-                        text("${wf:errorMessage(wf:lastErrorNode())}")
+                        text("${wf:lastErrorNode()} - ${wf:actionTrackerUri(wf:lastErrorNode())}")
                 doc.stag("ok", to="kill")
                 doc.stag("error", to="kill")
 
