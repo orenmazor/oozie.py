@@ -35,7 +35,7 @@ class Coordinator:
         with tag("concurrency"):
           text("1")
         with tag("execution"):
-          text("FIFO")
+          text("LAST_ONLY")
         with tag("throttle"):
           text("1")
 
