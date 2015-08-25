@@ -42,9 +42,9 @@ class Workflow:
                     with tag("to"):
                         text(self.email)
                     with tag("subject"):
-                        text("WF ${wf:name()} failed")
+                        text("WF ${wf:name()} failed at ${wf:lastErrorNode()}")
                     with tag("body"):
-                        text("${wf:lastErrorNode()} - ${wf:id()}")
+                        text("http://hue.data.shopify.com/oozie/list_oozie_workflow/${wf:id()}")
                 doc.stag("ok", to="kill")
                 doc.stag("error", to="kill")
 
