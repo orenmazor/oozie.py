@@ -3,6 +3,7 @@ import os
 from yattag import Doc
 from json import loads
 from pywebhdfs.webhdfs import PyWebHdfsClient
+from datetime import datetime
 
 
 class OozieServer():
@@ -17,6 +18,12 @@ class OozieServer():
             raise RuntimeError("Couldn't reach oozie server. Is the provided url correct?")
         else:
             return [job for job in loads(response.content)['bundlejobs'] if job['status'] == status]
+
+    def set_endtime(self, thing, dt=datetime.now()):
+        response = put("{0}/oozie/v1/job/{1}?action=change&value=endtime={2}".format(self.url, thing, dt.strftime("%Y-%m-%dT%H:%MZ")))
+        if response.status_code != 200:
+            raise RuntimeError("Failed talking to oozie. {}".format(response.content))
+        return True
 
     def set_status(self, thing, status):
         response = put("{0}/oozie/v1/job/{1}?action={2}".format(self.url, thing, status))
